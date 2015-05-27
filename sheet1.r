@@ -1,0 +1,25 @@
+require("MMSec")
+
+# Load the image
+
+names <- c("Image01.jpg", "Image02.jpg", "Image03.jpg", "Image04.jpg", "Image05.jpg", "Image06.jpg", "Image07.jpg", "Image08.jpg", "Image09.jpg", "Image12.jpg", "Image13.jpg", "Image14.jpg", "Image15.jpg")
+
+sum <- matrix(0, nrow=3456, ncol=5184)
+
+for(name in names){
+	image <- load.jpg(paste("images/",name,sep=""))
+	image <- as.matrix(image) * 255
+
+	med <- median.2d(image, 3)
+
+	noise <- abs(med - image)
+	sum <- sum + noise
+
+	#save.jpg(greymap(noise), paste("outputs/",name,sep=""), overwrite=TRUE)
+}
+
+ref_pattern <- round(1/length(names) * sum)
+
+save.jpg(greymap(ref_pattern), "outputs/pattern.jpg", quality=1, overwrite=TRUE)
+
+
